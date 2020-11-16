@@ -136,6 +136,11 @@
             window.captchaCloseTab = settingsJson.abSettings.captchaCloseTab;
             jQuery("#ab_close_tab_toggle").addClass("toggled");
         } 
+		
+		if (settingsJson.abSettings.playerPriceList) {
+            window.playerPriceList = settingsJson.abSettings.playerPriceList;
+            jQuery("#ab_price_list_toggle").addClass("toggled");
+        } 
 
         if (settingsJson.abSettings.notificationEnabled) {
             window.notificationEnabled = settingsJson.abSettings.notificationEnabled;
@@ -753,6 +758,17 @@
                         '       </div>' +
                         '   </div>' +
                         '</div>' +
+						'<div style="width: 100%;" class="price-filter">' +
+                        '   <div style="padding : 22px" class="ut-toggle-cell-view">' +
+                        '       <span class="ut-toggle-cell-view--label">Use Price List</span>' +
+                        '           <div id="ab_price_list_toggle" class="ut-toggle-control">' +
+                        '           <div class="ut-toggle-control--track">' +
+                        '           </div>' +
+                        '           <div class= "ut-toggle-control--grip" >' +
+                        '           </div>' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
                         '<div><br></div>' +
                         '<div class="button-container">' +
                         '    <button class="btn-standard call-to-action" id="preserve_changes">Save Filter</button>' +
@@ -900,6 +916,10 @@
 
             if (window.captchaCloseTab) {
                 settingsJson.abSettings.captchaCloseTab = window.captchaCloseTab;
+            }
+			
+			if (window.playerPriceList) {
+                settingsJson.abSettings.playerPriceList = window.playerPriceList;
             }
 
 
@@ -1492,7 +1512,9 @@
 
                     let priceToBid = (window.bidExact) ? bidPrice : ((isBid) ? window.getSellBidPrice(bidPrice) : bidPrice);
                     let checkPrice = (window.bidExact) ? priceToBid : ((isBid) ? window.getBuyBidPrice(currentBid) : currentBid);
-                    let userBuyNowPrice = parseInt(jQuery('#ab_buy_price').val());
+                    
+					//Add if statement here
+					let userBuyNowPrice = parseInt(jQuery('#ab_buy_price').val());
 
                     let bid_buy_txt = "(bid: " + window.format_string(currentBid.toString(), 6) + " / buy:" + window.format_string(buyNowPrice.toString(), 7) + ")"
                     let player_name = window.getItemName(player);
