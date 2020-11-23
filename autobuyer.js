@@ -38,6 +38,7 @@
     window.captchaCloseTab = false;
     window.toggleMessageNotification = false;
     window.botStopped = true;
+    window.priceListEnabled = false;
 
     var _searchViewModel = null;
 
@@ -84,6 +85,11 @@
         if (settingsJson.abSettings.reListEnabled) {
             window.reListEnabled = settingsJson.abSettings.reListEnabled;
             jQuery("#ab_sell_toggle").addClass("toggled");
+        }
+
+        if (settingsJson.abSettings.priceListEnabled) {
+            window.priceListEnabled = settingsJson.abSettings.priceListEnabled;
+            jQuery("#ab_price_list_toggle").addClass("toggled");
         }
 
         if (settingsJson.abSettings.waitTime) {
@@ -135,11 +141,6 @@
         if (settingsJson.abSettings.captchaCloseTab) {
             window.captchaCloseTab = settingsJson.abSettings.captchaCloseTab;
             jQuery("#ab_close_tab_toggle").addClass("toggled");
-        } 
-		
-		if (settingsJson.abSettings.playerPriceList) {
-            window.playerPriceList = settingsJson.abSettings.playerPriceList;
-            jQuery("#ab_price_list_toggle").addClass("toggled");
         } 
 
         if (settingsJson.abSettings.notificationEnabled) {
@@ -552,6 +553,15 @@
                         '        </div>' +
                         '    </div>' +
                         '</div>' +
+                        '<div style="padding-top : 20px" class="ut-toggle-cell-view">' +
+                        '    <span class="ut-toggle-cell-view--label">Price List</span>' +
+                        '    <div id="ab_price_list_toggle" class="ut-toggle-control">' +
+                        '        <div class="ut-toggle-control--track">' +
+                        '        </div>' +
+                        '        <div class= "ut-toggle-control--grip" >' +
+                        '        </div>' +
+                        '    </div>' +
+                        '</div>' +
                         '<div><br></div>' +
                         '<hr>' +
                         '<div class="search-price-header">' +
@@ -758,17 +768,6 @@
                         '       </div>' +
                         '   </div>' +
                         '</div>' +
-						'<div style="width: 100%;" class="price-filter">' +
-                        '   <div style="padding : 22px" class="ut-toggle-cell-view">' +
-                        '       <span class="ut-toggle-cell-view--label">Use Price List</span>' +
-                        '           <div id="ab_price_list_toggle" class="ut-toggle-control">' +
-                        '           <div class="ut-toggle-control--track">' +
-                        '           </div>' +
-                        '           <div class= "ut-toggle-control--grip" >' +
-                        '           </div>' +
-                        '       </div>' +
-                        '   </div>' +
-                        '</div>' +
                         '<div><br></div>' +
                         '<div class="button-container">' +
                         '    <button class="btn-standard call-to-action" id="preserve_changes">Save Filter</button>' +
@@ -854,6 +853,10 @@
                 settingsJson.abSettings.reListEnabled = window.reListEnabled;
             }
 
+            if (window.priceListEnabled) {
+                settingsJson.abSettings.reListEnabled = window.reListEnabled;
+            }
+
             if (jQuery('#ab_wait_time').val() !== '') {
                 settingsJson.abSettings.waitTime = jQuery('#ab_wait_time').val();
             }
@@ -916,10 +919,6 @@
 
             if (window.captchaCloseTab) {
                 settingsJson.abSettings.captchaCloseTab = window.captchaCloseTab;
-            }
-			
-			if (window.playerPriceList) {
-                settingsJson.abSettings.playerPriceList = window.playerPriceList;
             }
 
 
@@ -1084,6 +1083,16 @@
         }
     }
 
+    window.togglePriceList = function () {
+        if (window.priceListEnabled) {
+            window.priceListEnabled = false;
+            jQuery("#ab_price_list_toggle").removeClass("toggled");
+        } else {
+            window.priceListEnabled = true;
+            jQuery("#ab_price_list_toggle").addClass("toggled");
+        }
+    }
+
     window.toggleCloseTab = function () {
         if (window.captchaCloseTab) {
             window.captchaCloseTab = false;
@@ -1127,6 +1136,7 @@
 
     jQuery(document).on('click', '#ab_bid_exact', toggleBidExact);
     jQuery(document).on('click', '#ab_sell_toggle', toggleRelist);
+    jQuery(document).on('click', '#ab_price_list_toggle', togglePriceList);
 
     jQuery(document).on('click', '#ab_rand_min_bid_toggle', toggleUseRandMinBid);
     jQuery(document).on('click', '#ab_rand_min_buy_toggle', toggleUseRandMinBuy);
@@ -1512,9 +1522,7 @@
 
                     let priceToBid = (window.bidExact) ? bidPrice : ((isBid) ? window.getSellBidPrice(bidPrice) : bidPrice);
                     let checkPrice = (window.bidExact) ? priceToBid : ((isBid) ? window.getBuyBidPrice(currentBid) : currentBid);
-                    
-					//Add if statement here
-					let userBuyNowPrice = parseInt(jQuery('#ab_buy_price').val());
+                    let userBuyNowPrice = parseInt(jQuery('#ab_buy_price').val());
 
                     let bid_buy_txt = "(bid: " + window.format_string(currentBid.toString(), 6) + " / buy:" + window.format_string(buyNowPrice.toString(), 7) + ")"
                     let player_name = window.getItemName(player);
