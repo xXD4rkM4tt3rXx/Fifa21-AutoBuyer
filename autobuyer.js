@@ -185,6 +185,41 @@
             }
         }
     }
+	
+	window.createPlayerList = function (){
+		playerList = [];
+		for(var i = 1; i<=6;i++){
+			var playerObject = [];
+			playerObject.push(jQuery('#ab_player_name_'+i.toString()).val());
+			playerObject.push(jQuery('#ab_player_price_'+i.toString()).val());
+			playerList.push(playerObject);
+		}
+		return playerList;
+	}
+	
+	window.searchPlayerList = function (playername){
+	  var player = [];
+	  for(var i=0;i<window.playerList.length;i++){
+		if(window.playerList[i][0]==playername){
+			player=[playername,window.playerList[i][1]];
+		}
+	  }
+	  return player;
+	}
+	
+	window.getPlayerPrice = function (playername) {
+	  window.playerList = createPlayerList();
+	  var player = searchPlayerList(playername,window.playerList);
+	  if(player.length>0){
+		  return player[1];
+	  }
+	  else{
+		  return null;
+	  }
+	}
+	
+	window.playerList = [];
+	
 
     window.activateAutoBuyer = function (isStart) {
         if (window.autoBuyerActive) {
@@ -553,6 +588,7 @@
                         '        </div>' +
                         '    </div>' +
                         '</div>' +
+						
                         '<div style="padding-top : 20px" class="ut-toggle-cell-view">' +
                         '    <span class="ut-toggle-cell-view--label">Price List</span>' +
                         '    <div id="ab_price_list_toggle" class="ut-toggle-control">' +
@@ -689,6 +725,137 @@
                         '           </div>' +
                         '           <div class= "ut-toggle-control--grip" >' +
                         '           </div>' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+						'<div><br></div>' +
+                        '<hr>' +
+                        '<div class="search-price-header">' +
+                        '   <h1 class="secondary">Price List Settings:</h1>' +
+                        '</div>' +
+                        '<div><br></div>' +
+                        '<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Name:</span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="ut-text-input-control" id="ab_player_name_1" placeholder="Ronaldo">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Sell Price:<br/></span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="numericInput" id="ab_player_price_1" placeholder="100">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div><br></div>' +
+						'<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Name:</span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="ut-text-input-control" id="ab_player_name_2" placeholder="Ronaldo">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Sell Price:<br/></span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="numericInput" id="ab_player_price_2" placeholder="100">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div><br></div>' +
+						'<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Name:</span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="ut-text-input-control" id="ab_player_name_3" placeholder="Ronaldo">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Sell Price:<br/></span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="numericInput" id="ab_player_price_3" placeholder="100">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div><br></div>' +
+						'<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Name:</span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="ut-text-input-control" id="ab_player_name_4" placeholder="Ronaldo">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Sell Price:<br/></span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="numericInput" id="ab_player_price_4" placeholder="100">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div><br></div>' +
+						'<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Name:</span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="ut-text-input-control" id="ab_player_name_5" placeholder="Ronaldo">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Sell Price:<br/></span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="numericInput" id="ab_player_price_5" placeholder="100">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div><br></div>' +
+						'<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Name:</span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="ut-text-input-control" id="ab_player_name_6" placeholder="Ronaldo">' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>' +
+                        '<div class="price-filter">' +
+                        '   <div class="info">' +
+                        '       <span class="secondary label">Player Sell Price:<br/></span>' +
+                        '   </div>' +
+                        '   <div class="buttonInfo">' +
+                        '       <div class="inputBox">' +
+                        '           <input type="text" class="numericInput" id="ab_player_price_6" placeholder="100">' +
                         '       </div>' +
                         '   </div>' +
                         '</div>' +
