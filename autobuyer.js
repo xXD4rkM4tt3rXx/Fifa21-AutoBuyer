@@ -166,7 +166,7 @@
     };
 
     window.sendPinEvents = function (pageId) {
-        services.PIN.sendData(enums.PIN.EVENT.PAGE_VIEW, {
+        services.PIN.sendData(PINEventType.PAGE_VIEW, {
             type: PIN_PAGEVIEW_EVT_TYPE,
             pgid: pageId
         });
@@ -199,16 +199,17 @@
 	
 	window.searchPlayerList = function (playername){
 	  var player = [];
-	  for(var i=0;i<window.playerList.length;i++){
-		if(window.playerList[i][0]==playername){
-			player=[playername,window.playerList[i][1]];
-		}
+	  if(window.playerList!=null){
+		  for(var i=0;i<window.playerList.length;i++){
+			if(window.playerList[i][0]==playername){
+				player=[playername,window.playerList[i][1]];
+			}
+		  }
 	  }
 	  return player;
 	}
 	
 	window.getPlayerPrice = function (playername) {
-	  window.playerList = createPlayerList();
 	  var player = searchPlayerList(playername,window.playerList);
 	  if(player.length>0){
 		  return player[1];
@@ -1672,6 +1673,10 @@
                     sendPinEvents("Item - Detail View");
                     window.firstSearch = true;
                 }
+				
+				if(window.priceListEnabled){
+					window.playerList = createPlayerList();
+				}
 
                 for (let i = 0; i < response.data.items.length; i++) {
                     let action_txt = 'none';
@@ -1690,6 +1695,7 @@
                     let priceToBid = (window.bidExact) ? bidPrice : ((isBid) ? window.getSellBidPrice(bidPrice) : bidPrice);
                     let checkPrice = (window.bidExact) ? priceToBid : ((isBid) ? window.getBuyBidPrice(currentBid) : currentBid);
                     let userBuyNowPrice = parseInt(jQuery('#ab_buy_price').val());
+					var playerListPrice;
 
                     let bid_buy_txt = "(bid: " + window.format_string(currentBid.toString(), 6) + " / buy:" + window.format_string(buyNowPrice.toString(), 7) + ")"
                     let player_name = window.getItemName(player);
@@ -1705,6 +1711,15 @@
                         rating_ok_txt = "ok";
                     }
                     let rating_txt = "(" + player_rating + "-" + rating_ok_txt + ") ";
+					
+					if(window.priceListEnabled){
+						playerListPrice = getPlayerPrice(player_name.trim());
+						if(playerList!=null && playerListPrice!=null){
+							let playerListBuyPrice = playerListPrice*0.95-300;
+							userBuyNowPrice = playerListBuyPrice;	
+						}
+					}
+					
 
                     // ============================================================================================================
                     // checking reasons to skip
@@ -1731,7 +1746,7 @@
                     if (rating_ok && window.autoBuyerActive && buyNowPrice <= userBuyNowPrice && buyNowPrice <= window.futStatistics.coinsNumber && !window.bids.includes(auction.tradeId)) {
                         action_txt = 'attempt buy: ' + buy_txt;
                         writeToDebugLog("| " + rating_txt + ' | ' + player_name + ' | ' + bid_txt + ' | ' + buy_txt + ' | ' + expire_time + ' | ' + action_txt);
-                        buyPlayer(player, buyNowPrice, true);
+                        buyPlayer(player, buyNowPrice, true,playerListPrice);
                         maxPurchases--;
                         if (!window.bids.includes(auction.tradeId)) {
                             window.bids.push(auction.tradeId);
@@ -1762,7 +1777,10 @@
                         }
                     } else {
                         if (buyNowPrice > userBuyNowPrice || currentBid > priceToBid) {
-                            action_txt = 'skip >>> (higher than specified buy/bid price)';
+							action_txt = 'skip >>> (higher than specified buy/bid price)';
+							if(window.priceListEnabled){
+								action_txt = 'skip >>> Price List Buy Price: '+userBuyNowPrice;
+							}
                             writeToDebugLog("| " + rating_txt + ' | ' + player_name + ' | ' + bid_txt + ' | ' + buy_txt + ' | ' + expire_time + ' | ' + action_txt);
                             continue;
                         }
@@ -1886,7 +1904,7 @@
         });
     };
 
-    window.buyPlayer = function (player, price, isBin) {
+    window.buyPlayer = function (player, price, isBin, playerListPrice) {
         services.Item.bid(player, price).observe(this, (function (sender, data) {
             let price_txt = window.format_string(price.toString(), 6)
             let player_name = window.getItemName(player);
@@ -1895,8 +1913,11 @@
                 if (isBin) {
                     window.purchasedCardCount++;
                 }
-
+				
                 var sellPrice = parseInt(jQuery('#ab_sell_price').val());
+				if(window.priceListEnabled && playerListPrice!=null){
+					sellPrice = playerListPrice;
+				}
                 if (isBin && sellPrice !== 0 && !isNaN(sellPrice)) {
                     window.winCount++;
                     let sym = " W:" + window.format_string(window.winCount.toString(), 4);
